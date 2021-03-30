@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>首页</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="../static/js/echarts.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style=" padding:0px; padding-left:20px;">
+        <li><a href="#">首页</a></li>
+        <li></li>
+    </ul>
+</div>
+
+<!--    echars-->
+<div id="main" style="width: auto;height:660px;"></div>
+<div id="main1" style="width: auto;height:660px;"></div>
+<script type="text/javascript">
+    // 指定图表的配置项和数据
+
+    $.ajax({
+        url: 'show/cartype',
+        type: 'post',
+        datatype: 'json',
+        success: function (datas) {
+            var chartDom = document.getElementById('main');
+            var myChart = echarts.init(chartDom,'dark');
+            var option
+            option = {
+                title: {
+                    text: '房车类型分布',
+                    subtext: '',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                },
+                series: [
+                    {
+                        name: '房车类型',
+                        type: 'pie',
+                        radius: '50%',
+                        data: datas,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            option && myChart.setOption(option);
+        }
+    });
+    $.ajax({
+        url: 'show/order',
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            var chartDom = document.getElementById('main1');
+            var myChart = echarts.init(chartDom,'dark');
+            var option;
+
+            option = {
+                title: {
+                    text: '各月品牌销量'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {},
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: data
+            };
+
+            option && myChart.setOption(option);
+        }
+    });
+
+</script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

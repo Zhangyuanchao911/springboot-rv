@@ -1,0 +1,107 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商品列表</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../../static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../../static/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../../../static/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style="  margin:0px; ">
+        <li>租赁中心</li>
+        <li>租赁</li>
+        <li>车辆列表</li>
+    </ul>
+</div>
+<div class="row alert alert-info" style="margin:0px; padding:3px;">
+    <form class="form-inline" th:action="@{/rv/biz-car/savefuzzylist}">
+        <div class="form-group">
+            <label class="" for="activename">车辆名称：</label>
+            <input type="text" name="kw" class="form-control" id="activename" placeholder="请输入车辆名称">
+        </div>
+        <input type="submit" class="btn btn-danger" value="查询"/>
+        <!-- Single button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                房车类型 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li th:each="type:${types}"><a th:text="${type.value}"
+                                               th:href="@{/rv/biz-car/listbytypestate(typeId=${type.id})}"></a></li>
+
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                档类 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li th:each="gear:${gears}"><a th:text="${gear.value}"
+                                               th:href="@{/rv/biz-car/listbygearstate(gearId=${gear.id})}"></a></li>
+
+            </ul>
+        </div>
+    </form>
+</div>
+<div class="row" style="padding:15px; padding-top:0px; ">
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th><b>序号</b></th>
+            <th>车辆名称</th>
+            <th>车牌号</th>
+            <th>品牌</th>
+            <th>价格(元/天)</th>
+            <th>房车类型</th>
+            <th>档类</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="car:${carList}">
+            <td><b th:text="${carStat.index+1}"></b></td>
+            <td th:text="${car.bizCar.carName}"></td>
+            <td th:text="${car.bizCar.carNumber}"></td>
+            <td th:text="${car.bizBrand.brandName}"></td>
+            <td th:text="${car.bizCar.carPrice}"></td>
+            <td th:text="${car.sysDictType.value}"></td>
+            <td th:text="${car.sysDictGear.value}"></td>
+            <td th:text="${#dates.format(car.bizCar.updateTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>
+                <a th:href="@{/rv/biz-car/salefindbyid(id=${car.bizCar.carId})}" class="btn btn-sm btn-success">新建订单</a>
+            </td>
+        </tr>
+    </table>
+    <!--显示分页信息-->
+    <div class="modal-footer no-margin-top">
+        <div class="col-md-6">
+            当前第 [[${pageInfo.current}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
+        </div>
+
+        <ul class="pagination pull-right no-margin">
+            <li>
+                <a th:href="'/rv/biz-car/salelist?pageNum='+${1}">首页</a>
+            </li>
+            <!--遍历条数-->
+            <li th:each="nav:${list}">
+                <a th:href="'/rv/biz-car/salelist?pageNum='+${nav}" th:text="${nav}"
+                   th:if="${nav != pageInfo.current}"></a>
+                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.current}"
+                      th:text="${nav}"></span>
+            </li>
+
+
+            <li>
+                <a th:href="'/rv/biz-car/salelist?pageNum='+${pageInfo.pages}">尾页</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>品类详情</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../../static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../../static/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../../../static/js/bootstrap.min.js"></script>
+    <!--    日期组件相关的 js和css文件-->
+    <link rel="stylesheet" href="../../../static/css/bootstrap-datetimepicker.css">
+    <script src="../../../static/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../static/js/bootstrap-datetimepicker.fr.js"></script>
+    <script src="../../../static/js/bootstrapValidator.min.js"></script>
+
+    <!--toastr-->
+    <link rel="stylesheet" href="../../../static/css/toastr.min.css">
+    <script src="../../../static/js/toastr.min.js"></script>
+</head>
+
+<body>
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style="  margin:0px; ">
+        <li>车辆品牌管理</li>
+        <li>新增订单</li>
+    </ul>
+</div>
+<form th:action="@{/rv/biz-order/add}" class="form-horizontal" method="post">
+    <div class="page-header">
+        <h1>
+            订单信息
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                请根据真实信息录入
+            </small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 车辆名称 </label>
+
+                <div class="col-sm-9">
+                    <input disabled type="text" name="brandName" class="col-xs-10 col-sm-5"
+                           th:value="${car.carName}" id="order_car"/>
+                    <input type="hidden" name="carId" class="form-control input-sm" th:value="${car.carId}"/>
+                    <input type="hidden" name="userId" class="form-control input-sm"
+                           th:value="${session.loginuser.userId}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 车牌 </label>
+                <div class="col-sm-9">
+                    <input disabled type="text" name="brandName" class="col-xs-10 col-sm-5"
+                           th:value="${car.carNumber}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 押金 </label>
+
+                <div class="col-sm-9">
+                    <input disabled type="text" th:value="${car.carDeposit}" class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 客户姓名 </label>
+
+                <div class="col-sm-9">
+                    <input type="text" name="customerName" class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 联系方式 </label>
+
+                <div class="col-sm-9">
+                    <input type="text" name="customerTel" class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 开始日期 </label>
+                <div class='input-group date form_date col-xs-10 col-sm-4'>
+                    <input type='text' class="form-control" name="startTime" id="startTime"/>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 结束日期 </label>
+                <div class='input-group date form_date col-xs-10 col-sm-4'>
+                    <input type='text' class="form-control input-sm" name="endTime" id="endTime"/>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 备注 </label>
+                <div class="col-sm-9">
+                    <textarea rows="5" name="remark" class="col-xs-10 col-sm-5"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                <button class="btn btn-info" type="submit">
+                    <i class="ace-icon fa fa-check bigger-110"></i>
+                    提交
+                </button>
+                &nbsp; &nbsp; &nbsp;&nbsp;
+                <button class="btn" type="reset">
+                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                    重置
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <a class="btn btn-warning" th:href="@{/rv/biz-brand/list}">返回上一级</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    -->
+    <!--    &lt;!&ndash;结束 &ndash;&gt;-->
+    <!--    <div class="row">-->
+    <!--        <div class="col-sm-3 col-sm-offset-4">-->
+    <!--            <input type="submit" class="btn btn-success" value="提交"/>-->
+    <!--            <a class="btn btn-warning" th:href="@{/rv/biz-brand/list}">返回上一级</a>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</form>
+
+
+<script th:inline="javascript">
+    toastr.options = {
+        closeButton: false,
+        debug: false,
+        progressBar: true,
+        positionClass: "toast-top-center",
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "3000",
+        timeOut: "3000",
+        extendedTimeOut: "3000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+    };
+    $('.form_date').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: true,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+
+    $('form').bootstrapValidator({
+        //默认提示
+        message: 'This value is not valid',
+        // 表单框里右侧的icon
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitHandler: function (validator, form, submitButton) {
+            // 表单提交成功时会调用此方法
+            // validator: 表单验证实例对象
+            // form jq对象 指定表单对象
+            // submitButton jq对象 指定提交按钮的对象
+            // if ($("form").data('bootstrapValidator').isValid()) {  //获取验证结果，如果成功，执行下面代码
+            //     alert("yes");  //验证成功后的操作，如ajax
+            // }
+            alert($('#carName').val());
+        },
+        fields: {
+            customerName: {
+                message: '用户名验证失败',
+                validators: {
+                    notEmpty: {   //不能为空
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            customerTel: {
+                message: '电话号验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '电话号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^1\d{10}$/,
+                        message: '请输入正确的电话号'
+                    }
+                }
+            },
+            startTime: {
+                trigger:'change',
+                message: '',
+                validators: {
+                    notEmpty: {
+                        message: '请选择开始日期'
+                    }
+                }
+            },
+            endTime: {
+                trigger:'change',
+                message: '',
+                validators: {
+                    notEmpty: {
+                        message: '请选择结束日期'
+                    }
+                }
+            }
+
+        }
+
+    });
+
+</script>
+</body>
+</html>

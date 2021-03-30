@@ -1,0 +1,155 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商品列表</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../../static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../../static/js/jquery.min.js"></script>
+
+    <script src="../../../static/js/jquery-3.5.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../../../static/js/bootstrap.min.js"></script>
+    <!--    bootbox-->
+    <script src="../../../static/bootbox/bootbox.min.js"></script>
+    <script src="../../../static/bootbox/bootbox.locales.min.js"></script>
+    <!--toastr-->
+    <link rel="stylesheet" href="../../../static/css/toastr.min.css">
+    <script src="../../../static/js/toastr.min.js"></script>
+</head>
+<body>
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style="  margin:0px; ">
+        <li>车辆中心</li>
+        <li>车辆管理</li>
+        <li>车辆列表</li>
+    </ul>
+</div>
+<div class="row alert alert-info" style="margin:0px; padding:3px;">
+    <form class="form-inline" th:action="@{/rv/biz-car/fuzzylist}">
+        <div class="form-group">
+            <label class="" for="activename">车辆名称：</label>
+            <input type="text" name="kw" class="form-control" id="activename" placeholder="请输入车辆名称">
+        </div>
+        <input type="submit" class="btn btn-danger" value="查询"/>
+        <!-- Single button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                租赁状态 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a th:href="@{/rv/biz-car/listbystate(state='已租赁')}">已租赁</a></li>
+                <li><a th:href="@{/rv/biz-car/listbystate(state='未租赁')}">未租赁</a></li>
+
+            </ul>
+        </div>
+        <a th:href="@{/rv/biz-car/exportListExcel}" class="btn btn-success">导出</a>
+    </form>
+
+    <!--    <form id="upload-form" method="POST" th:action="@{/rv/biz-car/importexcel}" enctype="multipart/form-data">-->
+    <!--        <label>导入商品数据：</label>-->
+    <!--        <input type="file" name="file" id="excelfile" value=""/>-->
+
+    <!--        <input type="submit" id="upload" value="上传"/>-->
+    <!--    </form>-->
+</div>
+<div class="row" style="padding:15px; padding-top:0px; ">
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+
+            <th><b>序号</b></th>
+            <th>车辆名称</th>
+            <th>车牌号</th>
+            <th>品牌</th>
+            <th>价格(元/天)</th>
+            <th>押金(元)</th>
+            <th>房车类型</th>
+            <th>档类</th>
+            <th>租赁状态</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="car:${carList}">
+            <td><b th:text="${carStat.index+1}"></b></td>
+            <td hidden="hidden" id="carId"><b th:text="${carStat.index+1}"></b></td>
+            <td th:text="${car.bizCar.carName}"></td>
+            <td th:text="${car.bizCar.carNumber}"></td>
+            <td th:text="${car.bizBrand.brandName}"></td>
+            <td th:text="${car.bizCar.carPrice}"></td>
+            <td th:text="${car.bizCar.carDeposit}"></td>
+            <td th:text="${car.sysDictType.value}"></td>
+            <td th:text="${car.sysDictGear.value}"></td>
+            <td th:text="${car.bizCar.state}"></td>
+            <td th:text="${#dates.format(car.bizCar.updateTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>
+                <a th:href="@{/rv/biz-car/findbyid(id=${car.bizCar.carId})}" class="btn btn-sm btn-primary">修改</a>
+
+                <a th:href="@{/rv/biz-car/delete(id=${car.bizCar.carId})}" class="btn btn-sm btn-danger" name="deleted">删除</a>
+            </td>
+        </tr>
+    </table>
+
+    <!--显示分页信息-->
+    <div class="modal-footer no-margin-top">
+        <div class="col-md-6">
+            当前第 [[${pageInfo.current}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
+        </div>
+
+        <ul class="pagination pull-right no-margin">
+            <li>
+                <a th:href="'/rv/biz-car/listbypage?pageNum='+${1}">首页</a>
+            </li>
+            <!--遍历条数-->
+            <li th:each="nav:${list}">
+                <a th:href="'/rv/biz-car/listbypage?pageNum='+${nav}" th:text="${nav}"
+                   th:if="${nav != pageInfo.current}"></a>
+                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.current}"
+                      th:text="${nav}"></span>
+            </li>
+            <li>
+                <a th:href="'/rv/biz-car/listbypage?pageNum='+${pageInfo.pages}">尾页</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<script th:inline="javascript">
+    toastr.options = {
+        closeButton: false,
+        debug: false,
+        progressBar: true,
+        positionClass: "toast-top-center",
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "3000",
+        timeOut: "3000",
+        extendedTimeOut: "3000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+    };
+    $("[name=deleted]").click(function () {
+        if (confirm("确定删除该记录？")) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    var success = [[${success}]];
+    if (success != null) {
+        toastr.success(success);
+    }
+    var fail = [[${fail}]];
+    if (fail != null) {
+        toastr.warning(fail);
+    }
+
+</script>
+</body>
+
+</html>

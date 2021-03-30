@@ -1,0 +1,204 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商品详情</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../../static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../../static/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../../../static/js/bootstrap.min.js"></script>
+    <!--    表单验证-->
+    <script src="../../../static/js/bootstrapValidator.min.js"></script>
+</head>
+
+<body>
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style="  margin:0px; ">
+        <li><a href="#">车辆中心</a></li>
+        <li>车辆录入</li>
+        <li>录入信息</li>
+    </ul>
+</div>
+
+<form th:action="@{/rv/biz-car/add}" class="form-horizontal">
+    <div class="page-header">
+        <h1>
+            车辆信息
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                请根据真实信息录入
+            </small>
+        </h1>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 车辆名称 </label>
+                <div class="col-sm-9">
+                    <input type="text" id="carName" name="carName" placeholder=""
+                           class=" col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 车牌号 </label>
+                <div class="col-sm-9">
+                    <input type="text" id="carNumber" name="carNumber" placeholder="例如: 鲁A KM958"
+                           class=" col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 租赁价格(元/天) </label>
+                <div class="col-sm-9">
+                    <input type="text" name="carPrice" id="carPrice" class=" col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 押金(元) </label>
+                <div class="col-sm-9">
+                    <input type="text" name="carDeposit" id="carDeposit" class=" col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 品牌 </label>
+                <div class="col-sm-9">
+                    <select name="brandId" class="col-xs-10 col-lg-5" id="brandId">
+                        <option th:value="${brand.brandId}" th:text="${brand.brandName}" th:each=" brand :${brandList}">
+                            无
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 房车类型 </label>
+
+                <div class="col-sm-9">
+                    <select name="type" class="col-xs-10 col-lg-5" id="type">
+                        <option th:value="${type.id}" th:text="${type.value}" th:each=" type:${typeList}">无</option>
+                        无
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 档类 </label>
+
+                <div class="col-sm-9">
+                    <select name="gear" class="col-xs-10 col-lg-5" id="gear">
+                        <option th:value="${gear.id}" th:text="${gear.value}" th:each="gear:${gearList}">无</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 具体描述 </label>
+                <div class="col-sm-9">
+                    <input type="text" name="carDescribe" class="col-xs-10 col-sm-5">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+                &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                <button class="btn btn-info" type="submit">
+                    <i class="ace-icon fa fa-check bigger-110"></i>
+                    提交
+                </button>
+                &nbsp; &nbsp; &nbsp;&nbsp;
+                <button class="btn" type="reset">
+                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $('form').bootstrapValidator({
+        //默认提示
+        message: 'This value is not valid',
+        // 表单框里右侧的icon
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitHandler: function (validator, form, submitButton) {
+            // 表单提交成功时会调用此方法
+            // validator: 表单验证实例对象
+            // form jq对象 指定表单对象
+            // submitButton jq对象 指定提交按钮的对象
+            // if ($("form").data('bootstrapValidator').isValid()) {  //获取验证结果，如果成功，执行下面代码
+            //     alert("yes");  //验证成功后的操作，如ajax
+            // }
+        },
+        fields: {
+            carName: {
+                message: '车辆名称验证失败',
+                validators: {
+                    notEmpty: {   //不能为空
+                        message: '车辆名称不能为空'
+                    }
+                }
+            },
+            carNumber: {
+                message: '车牌号验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '车牌号不能为空'
+                    },
+                    remote: {  //后台验证，比如查询用户名是否存在
+                        url: '/rv/biz-car/checkcarnumber',
+                        message: '该车牌号已存在',
+                        delay:1000
+                    },
+                    regexp:{
+                        regexp:/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-Z0-9]{5,6}$/,
+                        message:'请输入正确的车牌号格式'
+                    }
+                }
+            },
+            carPrice: {
+                message: '',
+                validators: {
+                    notEmpty: {
+                        message: '请填写租赁价格'
+                    },
+                    // numeric: {
+                    //     message: '请填写租赁价格'
+                    // }
+                    regexp: {  //正则验证
+                        regexp: /^\+?((\d*(\.\d{1,2})$)|(\d+$))/,
+                        message: '请输入正确的数字格式'
+                    }
+                }
+            },
+            carDeposit: {
+                message: '押金验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '请填写押金'
+                    },
+                    regexp: {  //正则验证
+                        regexp: /^\+?((\d*(\.\d{1,2})$)|(\d+$))/,
+                        message: '请输入正确的数字格式'
+                    }
+
+                }
+            }
+
+        }
+
+    });
+</script>
+
+
+</body>
+</html>

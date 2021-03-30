@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.SysRolePermDao">
+  <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.SysRolePerm">
+    <id column="sys_role_perm_id" jdbcType="VARCHAR" property="sysRolePermId" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="perm_id" jdbcType="VARCHAR" property="permId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sys_role_perm_id, role_id, perm_id, create_time, update_time, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role_perm
+    where sys_role_perm_id = #{sysRolePermId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_role_perm
+    where sys_role_perm_id = #{sysRolePermId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="sys_role_perm_id" keyProperty="sysRolePermId" parameterType="com.xdd.springrvmp.rv.model.SysRolePerm" useGeneratedKeys="true">
+    insert into sys_role_perm (role_id, perm_id, create_time, 
+      update_time, is_deleted)
+    values (#{roleId,jdbcType=VARCHAR}, #{permId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" keyColumn="sys_role_perm_id" keyProperty="sysRolePermId" parameterType="com.xdd.springrvmp.rv.model.SysRolePerm" useGeneratedKeys="true">
+    insert into sys_role_perm
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="permId != null">
+        perm_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="permId != null">
+        #{permId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.SysRolePerm">
+    update sys_role_perm
+    <set>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="permId != null">
+        perm_id = #{permId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where sys_role_perm_id = #{sysRolePermId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.SysRolePerm">
+    update sys_role_perm
+    set role_id = #{roleId,jdbcType=VARCHAR},
+      perm_id = #{permId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where sys_role_perm_id = #{sysRolePermId,jdbcType=VARCHAR}
+  </update>
+</mapper>

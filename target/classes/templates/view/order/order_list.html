@@ -1,0 +1,202 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>订单列表</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../../static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../../static/js/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../../../static/js/bootstrap.min.js"></script>
+
+    <!--toastr-->
+    <link rel="stylesheet" href="../../../static/css/toastr.min.css">
+    <script src="../../../static/js/toastr.min.js"></script>
+    <style>
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+<body>
+<div style="padding:0px; margin:0px;">
+    <ul class="breadcrumb" style="  margin:0px; ">
+        <li>订单管理</li>
+        <li>订单列表</li>
+    </ul>
+</div>
+<div class="row alert alert-info" style="margin:0px; padding:3px;">
+    <form class="form-inline" th:action="@{/rv/biz-order/listbyuser}">
+        <div class="form-group">
+            <label class="" for="activename">查询：</label>
+            <input type="text" name="kw" class="form-control" id="activename" placeholder="请输入客户姓名或订单号">
+        </div>
+        <input type="submit" class="btn btn-danger" value="查询"/>
+        &nbsp;&nbsp;
+        <!--        <a class="btn btn-success" th:href="@{/view/user/user_add}">添加用户</a>-->
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                订单状态 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a th:href="@{/rv/biz-order/listbystate(state='未支付')}">未支付</a></li>
+                <li><a th:href="@{/rv/biz-order/listbystate(state='待提车')}">待提车</a></li>
+                <li><a th:href="@{/rv/biz-order/listbystate(state='已提车')}">已提车</a></li>
+                <li><a th:href="@{/rv/biz-order/listbystate(state='租赁时长超时')}">租赁时长超时</a></li>
+                <li><a th:href="@{/rv/biz-order/listbystate(state='完成')}">完成</a></li>
+
+            </ul>
+        </div>
+        <!--        <button class="btn btn-app btn-light btn-xs">-->
+        <!--            <i class="ace-icon fa fa-print bigger-160"></i>-->
+        <!--            打印-->
+        <!--        </button>-->
+    </form>
+</div>
+<div class="row" style="padding:15px; padding-top:0px; ">
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <!--            <th class="center">-->
+            <!--                <label class="pos-rel">-->
+            <!--                    <input type="checkbox" class="ace" />-->
+            <!--                    <span class="lbl"></span>-->
+            <!--                </label>-->
+            <!--            </th>-->
+            <th><b>序号</b></th>
+            <th><b>订单号</b></th>
+            <th>客户</th>
+            <th>联系方式</th>
+            <th>车辆名称</th>
+            <th>车牌号</th>
+            <th>租赁时长(天)</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>租金</th>
+            <th>押金</th>
+            <th>创建人</th>
+            <th>状态</th>
+            <!--            <th>备注</th>-->
+            <th>操作</th>
+        </tr>
+        <tr th:each="order: ${orders}">
+            <!--            <td class="center">-->
+            <!--                <label class="pos-rel">-->
+            <!--                    <input type="checkbox" class="ace" />-->
+            <!--                    <span class="lbl"></span>-->
+            <!--                </label>-->
+            <!--            </td>-->
+            <td><b th:text="${orderStat.index+1}"></b></td>
+            <td th:text="${order.order.orderId}"></td>
+            <td th:text="${order.order.customerName}"></td>
+            <td th:text="${order.order.customerTel}"></td>
+            <td th:text="${order.car.carName}"></td>
+            <td th:text="${order.car.carNumber}"></td>
+            <td th:text="${order.day}"></td>
+            <td th:text="${#dates.format(order.order.startTime,'yyyy-MM-dd')}"></td>
+            <td th:text="${#dates.format(order.order.endTime,'yyyy-MM-dd')}"></td>
+            <td th:text="${order.order.rental}"></td>
+            <td th:text="${order.car.carDeposit}"></td>
+            <td th:text="${order.user.userName}"></td>
+            <td>
+                <span th:text="${order.order.orderState}" class="label label-sm label-warning">Expiring</span>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        订单状态 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu delete">
+                        <li>
+                            <a th:href="@{/rv/biz-order/updatestate(state='待提车',orderId =${order.order.orderId},userId=${session.loginuser.userId})}">待提车</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/rv/biz-order/updatestate(state='已提车',orderId =${order.order.orderId},userId=${session.loginuser.userId})}">已提车</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/rv/biz-order/updatestate(state='完成',orderId =${order.order.orderId},userId=${session.loginuser.userId})}">完成</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/rv/biz-order/updatestate(state='续租',orderId =${order.order.orderId},userId=${session.loginuser.userId})}">续租</a>
+                        </li>
+                    </ul>
+                </div>
+                <a name="deleted01" th:href="@{/rv/biz-order/delete(id=${order.order.orderId})}"
+                   shiro:hasRole="superadmin"
+                   class="btn btn-sm btn-danger">删除</a>
+            </td>
+        </tr>
+
+    </table>
+    <!--显示分页信息-->
+    <div class="modal-footer no-margin-top">
+        <div class="col-md-6">
+            当前第 [[${pageInfo.current}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
+        </div>
+
+        <ul class="pagination pull-right no-margin">
+            <li>
+                <a th:href="'/rv/biz-order/listbyuser?pageNum='+${1}">首页</a>
+            </li>
+            <!--遍历条数-->
+            <li th:each="nav:${list}">
+                <a th:href="'/rv/biz-order/listbyuser?pageNum='+${nav}" th:text="${nav}"
+                   th:if="${nav != pageInfo.current}"></a>
+                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.current}"
+                      th:text="${nav}"></span>
+            </li>
+
+
+            <li>
+                <a th:href="'/rv/biz-order/listbyuser?pageNum='+${pageInfo.pages}">尾页</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script th:inline="javascript">
+    toastr.options = {
+        closeButton: false,
+        debug: false,
+        progressBar: true,
+        positionClass: "toast-top-center",
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "3000",
+        timeOut: "3000",
+        extendedTimeOut: "3000",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+    };
+    $("[name=deleted01]").click(function () {
+        if (confirm("确定删除订单？")) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    $(".delete li").click(function () {
+        if (confirm("确定更改订单状态？")) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    var success = [[${success}]];
+    if (success != null) {
+        toastr.success(success);
+    }
+    var fail = [[${fail}]];
+    if (fail != null) {
+        toastr.warning(fail);
+    }
+
+</script>
+</body>
+</html>

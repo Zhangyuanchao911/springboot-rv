@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.BizCarDao">
+    <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.BizCar">
+        <id column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="car_name" jdbcType="VARCHAR" property="carName"/>
+        <result column="car_price" jdbcType="DECIMAL" property="carPrice"/>
+        <result column="car_deposit" jdbcType="DECIMAL" property="carDeposit"/>
+        <result column="car_number" jdbcType="CHAR" property="carNumber"/>
+        <result column="brand_id" jdbcType="VARCHAR" property="brandId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="gear" jdbcType="VARCHAR" property="gear"/>
+        <result column="car_describe" jdbcType="VARCHAR" property="carDescribe"/>
+        <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    car_id, car_name, car_price, car_deposit, car_number, brand_id, `type`, gear, car_describe, creat_time,
+    update_time, `state`, is_deleted
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_car
+        where car_id = #{carId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_car
+        where is_deleted = '0'
+        <if test="kw !=null">
+            and car_name like CONCAT('%',#{kw},'%')
+        </if>
+        <if test="state!=null">
+            and state = #{state}
+        </if>
+        order by update_time desc
+    </select>
+    <select id="selectAll" resultType="com.xdd.springrvmp.rv.model.BizCar">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_car
+        where is_deleted = '0'
+    </select>
+
+    <select id="selectByPageSave" resultType="com.xdd.springrvmp.rv.model.BizCar">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_car
+        where is_deleted = '0' and state = '未租赁'
+        <if test="kw != null">
+            and car_name like CONCAT('%',#{kw},'%')
+        </if>
+        <if test="gear != null">
+            and gear = #{gear}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        order by update_time desc
+    </select>
+    <select id="selectShowCar" resultType="com.xdd.springrvmp.rv.model.vo.ShowCar">
+        SELECT
+	COUNT( C.type ) AS value,
+	D.`value` AS name
+FROM
+	`biz_car` C
+	LEFT JOIN sys_dict D ON C.type = D.id
+WHERE
+	C.is_deleted = '0' AND D.is_deleted = '0'
+GROUP BY
+	C.type
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update biz_car set  is_deleted = 1
+    where car_id = #{carId,jdbcType=VARCHAR}
+  </update>
+    <insert id="insert" keyColumn="car_id" keyProperty="carId" parameterType="com.xdd.springrvmp.rv.model.BizCar"
+            useGeneratedKeys="true">
+    insert into biz_car (car_name, car_price, car_deposit, car_number,
+      brand_id, `type`, gear, 
+      car_describe, creat_time, update_time, 
+      `state`, is_deleted)
+    values (#{carName,jdbcType=VARCHAR}, #{carPrice,jdbcType=DECIMAL}, #{carDeposit,jdbcType=DECIMAL}, #{carNumber,jdbcType=CHAR},
+      #{brandId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{gear,jdbcType=VARCHAR}, 
+      #{carDescribe,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT})
+  </insert>
+    <insert id="insertSelective" keyColumn="car_id" keyProperty="carId"
+            parameterType="com.xdd.springrvmp.rv.model.BizCar" useGeneratedKeys="true">
+        insert into biz_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                car_id,
+            </if>
+            <if test="carName != null">
+                car_name,
+            </if>
+            <if test="carPrice != null">
+                car_price,
+            </if>
+            <if test="carDeposit != null">
+                car_deposit,
+            </if>
+            <if test="carNumber != null">
+                car_number,
+            </if>
+            <if test="brandId != null">
+                brand_id,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="gear != null">
+                gear,
+            </if>
+            <if test="carDescribe != null">
+                car_describe,
+            </if>
+            <if test="creatTime != null">
+                creat_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="state != null">
+                `state`,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="carName != null">
+                #{carName,jdbcType=VARCHAR},
+            </if>
+            <if test="carPrice != null">
+                #{carPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="carDeposit != null">
+                #{carDeposit,jdbcType=DECIMAL},
+            </if>
+            <if test="carNumber != null">
+                #{carNumber,jdbcType=CHAR},
+            </if>
+            <if test="brandId != null">
+                #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="gear != null">
+                #{gear,jdbcType=VARCHAR},
+            </if>
+            <if test="carDescribe != null">
+                #{carDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="creatTime != null">
+                #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.BizCar">
+        update biz_car
+        <set>
+            <if test="carName != null">
+                car_name = #{carName,jdbcType=VARCHAR},
+            </if>
+            <if test="carPrice != null">
+                car_price = #{carPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="carDeposit != null">
+                car_deposit = #{carDeposit  ,jdbcType=DECIMAL},
+            </if>
+            <if test="carNumber != null">
+                car_number = #{carNumber,jdbcType=CHAR},
+            </if>
+            <if test="brandId != null">
+                brand_id = #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="gear != null">
+                gear = #{gear,jdbcType=VARCHAR},
+            </if>
+            <if test="carDescribe != null">
+                car_describe = #{carDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="creatTime != null">
+                creat_time = #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                `state` = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+        </set>
+        where car_id = #{carId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.BizCar">
+    update biz_car
+    set car_name = #{carName,jdbcType=VARCHAR},
+      car_price = #{carPrice,jdbcType=DECIMAL},
+       car_deposit = #{carDeposit,jdbcType=DECIMAL},
+      car_number = #{carNumber,jdbcType=CHAR},
+      brand_id = #{brandId,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=VARCHAR},
+      gear = #{gear,jdbcType=VARCHAR},
+      car_describe = #{carDescribe,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `state` = #{state,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where car_id = #{carId,jdbcType=VARCHAR}
+  </update>
+    <update id="updateStateById" parameterType="java.lang.String">
+      update biz_car
+      set state = #{state,jdbcType=VARCHAR},
+      where car_id =#{carId,jdbcType=VARCHAR}
+    </update>
+</mapper>

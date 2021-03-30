@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.SysPermDao">
+  <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.SysPerm">
+    <id column="perm_id" jdbcType="VARCHAR" property="permId" />
+    <result column="perm_name" jdbcType="VARCHAR" property="permName" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="perm_url" jdbcType="VARCHAR" property="permUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    perm_id, perm_name, permission, perm_url, create_time, update_time, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_perm
+    where perm_id = #{permId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_perm
+    where perm_id = #{permId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="perm_id" keyProperty="permId" parameterType="com.xdd.springrvmp.rv.model.SysPerm" useGeneratedKeys="true">
+    insert into sys_perm (perm_name, permission, perm_url, 
+      create_time, update_time, is_deleted
+      )
+    values (#{permName,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, #{permUrl,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="perm_id" keyProperty="permId" parameterType="com.xdd.springrvmp.rv.model.SysPerm" useGeneratedKeys="true">
+    insert into sys_perm
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permName != null">
+        perm_name,
+      </if>
+      <if test="permission != null">
+        permission,
+      </if>
+      <if test="permUrl != null">
+        perm_url,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="permName != null">
+        #{permName,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="permUrl != null">
+        #{permUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.SysPerm">
+    update sys_perm
+    <set>
+      <if test="permName != null">
+        perm_name = #{permName,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null">
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="permUrl != null">
+        perm_url = #{permUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where perm_id = #{permId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.SysPerm">
+    update sys_perm
+    set perm_name = #{permName,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      perm_url = #{permUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where perm_id = #{permId,jdbcType=VARCHAR}
+  </update>
+</mapper>

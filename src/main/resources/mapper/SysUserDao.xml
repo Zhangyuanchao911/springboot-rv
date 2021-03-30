@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.SysUserDao">
+    <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.SysUser">
+        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword"/>
+        <result column="user_account" jdbcType="VARCHAR" property="userAccount"/>
+        <result column="user_tel" jdbcType="CHAR" property="userTel"/>
+        <result column="user_sex" jdbcType="CHAR" property="userSex"/>
+        <result column="role_id" jdbcType="VARCHAR" property="roleId"/>
+        <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    user_id, user_name, user_password, user_account, user_tel, user_sex, role_id, creat_time, 
+    update_time, is_deleted
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByUserAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where user_account = #{account,jdbcType=VARCHAR} and is_deleted = 0
+    </select>
+    <select id="selectByPage" resultType="com.xdd.springrvmp.rv.model.SysUser">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where is_deleted = 0
+        <if test="kw !=null">
+            and user_name like CONCAT('%',#{kw}, '%')
+        </if>
+        order by creat_time desc
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update sys_user
+    set is_deleted = 1
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+    <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.xdd.springrvmp.rv.model.SysUser"
+            useGeneratedKeys="true">
+    insert into sys_user (user_name, user_password, user_account, 
+      user_tel, user_sex, role_id, 
+      creat_time, update_time, is_deleted
+      )
+    values (#{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, 
+      #{userTel,jdbcType=CHAR}, #{userSex,jdbcType=CHAR}, #{roleId,jdbcType=VARCHAR}, 
+      #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
+      )
+  </insert>
+    <insert id="insertSelective" keyColumn="user_id" keyProperty="userId"
+            parameterType="com.xdd.springrvmp.rv.model.SysUser" useGeneratedKeys="true">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userPassword != null">
+                user_password,
+            </if>
+            <if test="userAccount != null">
+                user_account,
+            </if>
+            <if test="userTel != null">
+                user_tel,
+            </if>
+            <if test="userSex != null">
+                user_sex,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="creatTime != null">
+                creat_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="userAccount != null">
+                #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel != null">
+                #{userTel,jdbcType=CHAR},
+            </if>
+            <if test="userSex != null">
+                #{userSex,jdbcType=CHAR},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="creatTime != null">
+                #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.SysUser">
+        update sys_user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                user_password = #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="userAccount != null">
+                user_account = #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel != null">
+                user_tel = #{userTel,jdbcType=CHAR},
+            </if>
+            <if test="userSex != null">
+                user_sex = #{userSex,jdbcType=CHAR},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="creatTime != null">
+                creat_time = #{creatTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.SysUser">
+    update sys_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      user_account = #{userAccount,jdbcType=VARCHAR},
+      user_tel = #{userTel,jdbcType=CHAR},
+      user_sex = #{userSex,jdbcType=CHAR},
+      role_id = #{roleId,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

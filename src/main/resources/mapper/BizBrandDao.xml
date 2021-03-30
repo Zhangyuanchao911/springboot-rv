@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.BizBrandDao">
+  <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.BizBrand">
+    <id column="brand_id" jdbcType="VARCHAR" property="brandId" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    brand_id, brand_name, creat_time, update_time, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_brand
+    where brand_id = #{brandId,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByPage" resultType="com.xdd.springrvmp.rv.model.BizBrand">
+      select
+      <include refid="Base_Column_List" />
+      from biz_brand
+      where is_deleted = '0'
+      <if test="kw != null">
+        and brand_name like CONCAT('%',#{kw},'%')
+      </if>
+      order by creat_time desc
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update biz_brand
+    set is_deleted = 1
+    where brand_id = #{brandId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" keyColumn="brand_id" keyProperty="brandId" parameterType="com.xdd.springrvmp.rv.model.BizBrand" useGeneratedKeys="true">
+    insert into biz_brand (brand_id, brand_name, creat_time, update_time,
+      is_deleted)
+    values (#{brandId,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{isDeleted,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" keyColumn="brand_id" keyProperty="brandId" parameterType="com.xdd.springrvmp.rv.model.BizBrand" useGeneratedKeys="true">
+    insert into biz_brand
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="brandName != null">
+        brand_name,
+      </if>
+      <if test="creatTime != null">
+        creat_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null">
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.BizBrand">
+    update biz_brand
+    <set>
+      <if test="brandName != null">
+        brand_name = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null">
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where brand_id = #{brandId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.BizBrand">
+    update biz_brand
+    set brand_name = #{brandName,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where brand_id = #{brandId,jdbcType=VARCHAR}
+  </update>
+</mapper>

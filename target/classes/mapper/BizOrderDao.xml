@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdd.springrvmp.rv.dao.BizOrderDao">
+    <resultMap id="BaseResultMap" type="com.xdd.springrvmp.rv.model.BizOrder">
+        <id column="order_id" jdbcType="VARCHAR" property="orderId"/>
+        <result column="car_id" jdbcType="VARCHAR" property="carId"/>
+        <result column="rental" jdbcType="DECIMAL" property="rental"/>
+        <result column="deposit" jdbcType="DECIMAL" property="deposit"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="customer_tel" jdbcType="VARCHAR" property="customerTel"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="order_state" jdbcType="VARCHAR" property="orderState"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    order_id, car_id, rental, deposit, start_time, end_time, customer_name, customer_tel, 
+    user_id, order_state, remark, create_time, update_time, is_deleted
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_order
+        where order_id = #{orderId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByPage" resultType="com.xdd.springrvmp.rv.model.BizOrder">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_order
+        where is_deleted = '0'
+        <if test="userId != null">
+            and user_id =#{userId}
+            <if test="kw != null">
+                and (customer_name like CONCAT('%',#{kw},'%') or order_id = #{kw})
+            </if>
+            <if test="state != null">
+                and order_state = #{state}
+            </if>
+
+        </if>
+        <if test="userId == null">
+            and 1=1
+            <if test="kw != null">
+                and (customer_name like CONCAT('%',#{kw},'%') or order_id = #{kw})
+            </if>
+            <if test="state != null">
+                and order_state = #{state}
+            </if>
+        </if>
+        ORDER BY start_time DESC
+    </select>
+    <select id="showOrder" resultType="com.xdd.springrvmp.rv.model.vo.ShowOrder">
+        SELECT
+	SUM( O.rental ) rental,
+	B.brand_name AS brandName,
+	MONTH ( O.start_time ) AS MONTH
+FROM
+	biz_order O
+	LEFT JOIN biz_car C ON O.car_id = C.car_id
+	LEFT JOIN biz_brand B ON B.brand_id = C.brand_id
+WHERE
+	O.is_deleted = '0'
+	AND YEAR ( O.start_time ) = YEAR (
+	NOW())
+GROUP BY
+	MONTH ( O.start_time ),
+	B.brand_id
+    </select>
+
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update biz_order set is_deleted = 1
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+    <insert id="insert" keyColumn="order_id" keyProperty="orderId" parameterType="com.xdd.springrvmp.rv.model.BizOrder"
+            useGeneratedKeys="true">
+    insert into biz_order (order_id, car_id, rental, deposit,
+      start_time, end_time, customer_name, 
+      customer_tel, user_id, order_state, 
+      remark, create_time, update_time, 
+      is_deleted)
+    values (#{orderId,jdbcType=VARCHAR},#{carId,jdbcType=VARCHAR}, #{rental,jdbcType=DECIMAL}, #{deposit,jdbcType=DECIMAL},
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{customerName,jdbcType=VARCHAR}, 
+      #{customerTel,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{orderState,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT})
+  </insert>
+    <insert id="insertSelective" keyColumn="order_id" keyProperty="orderId"
+            parameterType="com.xdd.springrvmp.rv.model.BizOrder" useGeneratedKeys="true">
+        insert into biz_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                car_id,
+            </if>
+            <if test="rental != null">
+                rental,
+            </if>
+            <if test="deposit != null">
+                deposit,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="customerName != null">
+                customer_name,
+            </if>
+            <if test="customerTel != null">
+                customer_tel,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="orderState != null">
+                order_state,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carId != null">
+                #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="rental != null">
+                #{rental,jdbcType=DECIMAL},
+            </if>
+            <if test="deposit != null">
+                #{deposit,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="customerName != null">
+                #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="customerTel != null">
+                #{customerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderState != null">
+                #{orderState,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xdd.springrvmp.rv.model.BizOrder">
+        update biz_order
+        <set>
+            <if test="carId != null">
+                car_id = #{carId,jdbcType=VARCHAR},
+            </if>
+            <if test="rental != null">
+                rental = #{rental,jdbcType=DECIMAL},
+            </if>
+            <if test="deposit != null">
+                deposit = #{deposit,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="customerName != null">
+                customer_name = #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="customerTel != null">
+                customer_tel = #{customerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderState != null">
+                order_state = #{orderState,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+        </set>
+        where order_id = #{orderId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xdd.springrvmp.rv.model.BizOrder">
+    update biz_order
+    set car_id = #{carId,jdbcType=VARCHAR},
+      rental = #{rental,jdbcType=DECIMAL},
+      deposit = #{deposit,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      customer_tel = #{customerTel,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      order_state = #{orderState,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>
